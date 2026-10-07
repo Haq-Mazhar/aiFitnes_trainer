@@ -1,202 +1,1770 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fitness App - Modern Flow</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Fitness Coach</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
-
-  <header>
-    <h1>FITNESS APP</h1>
-    <p>Your Dynamic Daily Health & Progress Tracker</p>
-  </header>
-
-  <main class="app-container">
-
-
-    <section id="step-1" class="screen active">
-      <span class="step-badge">Step 1</span>
-      <h2>Welcome</h2>
-      <p class="subtitle">Please log in to your account or register to get started.</p>
-      
-      <div class="auth-buttons">
-        <button class="btn" onclick="startAuth('signup')">Create Account (Sign Up)</button>
-        <button class="btn btn-outline" onclick="startAuth('login')">I already have an account (Log In)</button>
+  <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+  </div>
+  <nav id="mainNavbar" class="navbar navbar-expand-lg sticky-top d-none" aria-hidden="true">
+    <div class="container-fluid px-3">
+      <span class="navbar-brand brand-font fw-bold text-primary-teal">
+        <i class="bi bi-heart-pulse-fill text-primary-teal"></i>
+        AI Fitness Coach
+      </span>
+      <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-1">
+          <li class="nav-item"><a class="nav-link" href="#" data-screen="screen-dashboard"
+              onclick="navigateTo('screen-dashboard')">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-screen="screen-workout"
+              onclick="navigateTo('screen-workout')">Workout</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-screen="screen-diet"
+              onclick="navigateTo('screen-diet')">Diet</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-screen="screen-progress"
+              onclick="navigateTo('screen-progress')">Progress</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-screen="screen-chatbot"
+              onclick="navigateTo('screen-chatbot')">Chatbot</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-screen="screen-profile-page"
+              onclick="navigateTo('screen-profile-page')">Profile</a></li>
+        </ul>
       </div>
-    </section>
+    </div>
+  </nav>
 
-    
-    <section id="step-2" class="screen">
-      <span class="step-badge">Step 2</span>
-      <h2 id="auth-title">Account Access</h2>
-      <p class="subtitle" id="auth-subtitle">Enter your details to proceed.</p>
+  <div id="screen-splash">
 
-      <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+    <div class="text-center">
 
-        <div class="form-group" id="group-signup-name">
-          <label for="reg-name">Full Name</label>
-          <input type="text" id="reg-name" placeholder="Alex Smith">
-        </div>
+      <div class="splash-icon mb-3">
+        <i class="bi bi-heart-pulse-fill"></i>
+      </div>
 
-        <div class="form-group">
-          <label for="user-email">Email Address</label>
-          <input type="email" id="user-email" placeholder="student@example.com" required>
-        </div>
+      <h1 class="brand-font fw-bold">
+        AI Fitness Coach
+      </h1>
 
-        <div class="form-group">
-          <label for="user-password">Password</label>
-          <input type="password" id="user-password" placeholder="••••••••" required>
-        </div>
-
-
-        <div class="form-group" id="group-signup-confirm">
-          <label for="user-confirm-password">Confirm Password</label>
-          <input type="password" id="user-confirm-password" placeholder="••••••••">
-        </div>
-
-        <button type="submit" class="btn" id="auth-submit-btn">Continue</button>
-      </form>
-
-      <p class="toggle-auth">
-        <span id="auth-toggle-text">Already have an account?</span>
-        <a href="#" onclick="toggleAuthMode(); return false;" id="auth-toggle-link">Log In</a>
+      <p class="opacity-75">
+        Your simple personal fitness companion.
       </p>
-    </section>
 
+      <div class="spinner-border text-light mt-3" role="status">
 
-    <section id="step-3" class="screen">
-      <span class="step-badge">Step 3</span>
-      <h2>Profile Setup</h2>
-      <p class="subtitle">Let us customize your health metrics.</p>
+        <span class="visually-hidden">
+          Loading...
+        </span>
 
-      <div class="form-group">
-        <label for="user-age">Age</label>
-        <input type="number" id="user-age" placeholder="20" required>
-      </div>
-      <div class="form-group">
-        <label for="user-weight">Weight (kg)</label>
-        <input type="number" id="user-weight" placeholder="70" required>
-      </div>
-      <div class="form-group">
-        <label for="user-height">Height (cm)</label>
-        <input type="number" id="user-height" placeholder="175" required>
-      </div>
-      <button class="btn" onclick="nextStep(4)">Next Step</button>
-    </section>
-
-
-    <section id="step-4" class="screen">
-      <span class="step-badge">Step 4</span>
-      <h2>Fitness Goal</h2>
-      <p class="subtitle">What are you looking to achieve?</p>
-
-      <div class="form-group">
-        <label for="user-goal">Select your primary target:</label>
-        <select id="user-goal">
-          <option value="Weight Loss">Weight Loss</option>
-          <option value="Muscle Gain">Muscle Gain</option>
-          <option value="Maintenance">Maintain Weight</option>
-        </select>
-      </div>
-      <button class="btn" onclick="calculateMetrics(); nextStep(5);">Save & Calculate</button>
-    </section>
-
-
-    <section id="step-5" class="screen">
-      <span class="step-badge">Step 5</span>
-      <h2>BMI & Calories</h2>
-      <p class="subtitle">Calculated metrics based on your body composition:</p>
-
-      <div class="info-box">
-        <p><strong>BMI:</strong> <span id="bmi-val">--</span> (<span id="bmi-status">--</span>)</p>
-        <p><strong>Daily Calorie Target:</strong> <span id="calorie-val">--</span> kcal</p>
-      </div>
-      <button class="btn" onclick="generatePlan(); nextStep(6);">View Recommendations</button>
-    </section>
-
-
-    <section id="step-6" class="screen">
-      <span class="step-badge">Step 6</span>
-      <h2>Workout & Diet Plan</h2>
-      
-      <div class="info-box">
-        <p><strong>Workout Strategy:</strong></p>
-        <p id="workout-plan-text">Loading...</p>
-      </div>
-      <div class="info-box">
-        <p><strong>Diet Strategy:</strong></p>
-        <p id="diet-plan-text">Loading...</p>
-      </div>
-      <button class="btn" onclick="nextStep(7)">Enter Dashboard</button>
-    </section>
-
-    
-    <section id="step-7" class="screen">
-      <span class="step-badge">Step 7</span>
-      <h2>Dashboard</h2>
-      <p class="subtitle" id="dash-greeting">Welcome back!</p>
-
-      <div class="dashboard-tabs">
-        <button class="tab-btn active" onclick="switchTab('workout-tab', this)">Workout</button>
-        <button class="tab-btn" onclick="switchTab('habits-tab', this)">Habits</button>
-        <button class="tab-btn" onclick="switchTab('meals-tab', this)">Meals</button>
       </div>
 
-      
-      <div id="workout-tab" class="tab-content active">
-        <div class="list-item">
-          <span>Push-ups (3 sets x 15)</span>
-          <input type="checkbox">
+    </div>
+
+  </div>
+
+  <div id="screen-welcome" class="d-none centered-screen">
+
+    <div class="container text-center">
+
+      <i class="bi bi-heart-pulse-fill text-primary-teal" style="font-size: 3rem;">
+      </i>
+
+      <h1 class="brand-font fw-bold mt-3">
+        Welcome to AI Fitness Coach
+      </h1>
+
+      <p class="text-muted mb-4">
+        Your simple personal fitness companion.
+      </p>
+
+      <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+
+        <button class="btn btn-teal px-4" onclick="goToScreen('screen-login')">
+          Login
+        </button>
+
+        <button class="btn btn-outline-teal px-4" onclick="goToScreen('screen-signup')">
+          Sign Up
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="screen-login" class="d-none centered-screen">
+
+    <div class="container">
+
+      <div class="auth-card shadow-sm">
+
+        <h3 class="brand-font fw-bold mb-1">
+          Login
+        </h3>
+
+        <p class="text-muted mb-4">
+          Welcome back — let's get moving.
+        </p>
+
+        <div id="loginError" class="alert alert-danger d-none" role="alert">
         </div>
-        <div class="list-item">
-          <span>Bodyweight Squats (3 x 20)</span>
-          <input type="checkbox">
+
+        <form id="loginForm" novalidate>
+
+          <div class="mb-3">
+
+            <label class="form-label">
+              Email
+            </label>
+
+            <input type="email" class="form-control" id="loginEmail" required>
+
+          </div>
+
+          <div class="mb-4">
+
+            <label class="form-label">
+              Password
+            </label>
+
+            <input type="password" class="form-control" id="loginPassword" required>
+
+          </div>
+
+          <button type="submit" class="btn btn-teal w-100 mb-3">
+            Login
+          </button>
+
+        </form>
+
+        <p class="text-center mb-0 text-muted">
+
+          Don't have an account?
+
+          <a href="#" onclick="goToScreen('screen-signup')">
+            Sign up
+          </a>
+
+        </p>
+
+        <p class="text-center mt-2 mb-0">
+
+          <a href="#" class="text-muted small" onclick="goToScreen('screen-welcome')">
+
+            <i class="bi bi-arrow-left"></i>
+            Back
+
+          </a>
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div id="screen-signup" class="d-none centered-screen">
+
+    <div class="container">
+
+      <div class="auth-card shadow-sm">
+
+        <h3 class="brand-font fw-bold mb-1">
+          Create your account
+        </h3>
+
+        <p class="text-muted mb-4">
+          Start your fitness journey today.
+        </p>
+
+        <form id="signupForm" novalidate>
+
+          <div class="mb-3">
+
+            <label class="form-label">
+              Full Name
+            </label>
+
+            <input type="text" class="form-control" id="signupName" required>
+
+            <div class="invalid-feedback" id="signupNameError">
+            </div>
+
+          </div>
+
+          <div class="mb-3">
+
+            <label class="form-label">
+              Email
+            </label>
+
+            <input type="email" class="form-control" id="signupEmail" required>
+
+            <div class="invalid-feedback" id="signupEmailError">
+            </div>
+
+          </div>
+
+          <div class="mb-3">
+
+            <label class="form-label">
+              Password
+            </label>
+
+            <input type="password" class="form-control" id="signupPassword" required>
+
+            <div class="invalid-feedback" id="signupPasswordError">
+            </div>
+
+          </div>
+
+          <div class="mb-4">
+
+            <label class="form-label">
+              Confirm Password
+            </label>
+
+            <input type="password" class="form-control" id="signupConfirmPassword" required>
+
+            <div class="invalid-feedback" id="signupConfirmError">
+            </div>
+
+          </div>
+
+          <button type="submit" class="btn btn-teal w-100 mb-3">
+            Sign Up
+          </button>
+
+        </form>
+
+        <p class="text-center mb-0 text-muted">
+
+          Already have an account?
+
+          <a href="#" onclick="goToScreen('screen-login')">
+            Login
+          </a>
+
+        </p>
+
+        <p class="text-center mt-2 mb-0">
+
+          <a href="#" class="text-muted small" onclick="goToScreen('screen-welcome')">
+
+            <i class="bi bi-arrow-left"></i>
+            Back
+
+          </a>
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="screen-profile-setup" class="d-none centered-screen">
+
+    <div class="container">
+
+      <div class="auth-card shadow-sm" style="max-width: 560px;">
+
+        <h3 class="brand-font fw-bold mb-1">
+          Tell us about you
+        </h3>
+
+        <p class="text-muted mb-4">
+          This helps us calculate your BMI and calories.
+        </p>
+
+        <form id="profileSetupForm" novalidate>
+
+          <div class="row">
+
+            <div class="col-sm-6 mb-3">
+
+              <label class="form-label">
+                Age
+              </label>
+
+              <input type="number" class="form-control" id="profileAge" required>
+
+              <div class="invalid-feedback" id="profileAgeError">
+              </div>
+
+            </div>
+
+            <div class="col-sm-6 mb-3">
+
+              <label class="form-label d-block">
+                Gender
+              </label>
+
+              <div class="form-check form-check-inline mt-2">
+
+                <input class="form-check-input" type="radio" name="profileGender" id="genderMale" value="Male" checked>
+
+                <label class="form-check-label" for="genderMale">
+                  Male
+                </label>
+
+              </div>
+
+              <div class="form-check form-check-inline">
+
+                <input class="form-check-input" type="radio" name="profileGender" id="genderFemale" value="Female">
+
+                <label class="form-check-label" for="genderFemale">
+                  Female
+                </label>
+
+              </div>
+
+              <div class="text-danger small" id="profileGenderError">
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="row">
+
+            <div class="col-sm-6 mb-3">
+
+              <label class="form-label">
+                Height (cm)
+              </label>
+
+              <input type="number" class="form-control" id="profileHeight" required>
+
+              <div class="invalid-feedback" id="profileHeightError">
+              </div>
+
+            </div>
+
+            <div class="col-sm-6 mb-3">
+
+              <label class="form-label">
+                Weight (kg)
+              </label>
+
+              <input type="number" class="form-control" id="profileWeight" required>
+
+              <div class="invalid-feedback" id="profileWeightError">
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="mb-4">
+
+            <label class="form-label">
+              Activity Level
+            </label>
+
+            <select class="form-select" id="profileActivity">
+
+              <option value="sedentary">
+                Sedentary
+              </option>
+
+              <option value="light">
+                Lightly Active
+              </option>
+
+              <option value="moderate" selected>
+                Moderately Active
+              </option>
+
+              <option value="active">
+                Very Active
+              </option>
+
+            </select>
+
+          </div>
+
+          <button type="submit" class="btn btn-teal w-100">
+            Continue
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="screen-goal" class="d-none centered-screen">
+
+    <div class="container" style="max-width: 700px;">
+
+      <div class="text-center mb-4">
+
+        <h3 class="brand-font fw-bold">
+          What's your fitness goal?
+        </h3>
+
+        <p class="text-muted">
+          Pick the one that fits you best right now.
+        </p>
+
+      </div>
+
+      <div class="row g-3">
+
+        <div class="col-6 col-md-3">
+
+          <div class="goal-card" data-goal="lose" onclick="selectGoal('lose')">
+
+            <div class="goal-icon">
+              <i class="bi bi-fire"></i>
+            </div>
+
+            <div class="fw-semibold">
+              Lose Weight
+            </div>
+
+          </div>
+
         </div>
-        <div class="list-item">
-          <span>Plank (3 sets x 45s)</span>
-          <input type="checkbox">
+
+
+        <div class="col-6 col-md-3">
+
+          <div class="goal-card" data-goal="gain" onclick="selectGoal('gain')">
+
+            <div class="goal-icon">
+              <i class="bi bi-lightning-charge-fill"></i>
+            </div>
+
+            <div class="fw-semibold">
+              Gain Muscle
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-3">
+
+          <div class="goal-card" data-goal="healthy" onclick="selectGoal('healthy')">
+
+            <div class="goal-icon">
+              <i class="bi bi-heart-fill"></i>
+            </div>
+
+            <div class="fw-semibold">
+              Stay Healthy
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-3">
+
+          <div class="goal-card" data-goal="improve" onclick="selectGoal('improve')">
+
+            <div class="goal-icon">
+              <i class="bi bi-graph-up-arrow"></i>
+            </div>
+
+            <div class="fw-semibold">
+              Improve Fitness
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="text-center mt-4">
+
+        <button class="btn btn-teal btn-lg px-5" id="goalContinueBtn" disabled onclick="confirmGoal()">
+          Continue
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div id="screen-bmi" class="d-none centered-screen">
+
+    <div class="container text-center" style="max-width: 480px;">
+
+      <i class="bi bi-clipboard2-pulse text-primary-teal" style="font-size: 2.5rem;">
+      </i>
+
+      <h3 class="brand-font fw-bold mt-3">
+        Your BMI
+      </h3>
+
+      <p class="text-muted mb-4">
+        Based on the height and weight you gave us.
+      </p>
+
+      <div class="card shadow-sm p-4">
+
+        <div class="display-4 fw-bold text-primary-teal" id="bmiValue">
+          -
+        </div>
+
+        <span class="badge fs-6 mt-2 align-self-center" id="bmiCategory">
+          -
+        </span>
+
+      </div>
+
+      <button class="btn btn-teal btn-lg w-100 mt-4" onclick="continueToCalories()">
+        Continue
+      </button>
+
+    </div>
+
+  </div>
+
+  <div id="screen-calories" class="d-none centered-screen">
+
+    <div class="container text-center" style="max-width: 480px;">
+
+      <i class="bi bi-fire text-coral" style="font-size: 2.5rem; color: var(--coral);">
+      </i>
+
+      <h3 class="brand-font fw-bold mt-3">
+        Your Daily Calorie Target
+      </h3>
+
+      <p class="text-muted mb-4">
+        Calculated from your profile and goal.
+      </p>
+
+      <div class="card shadow-sm p-4">
+
+        <div class="display-5 fw-bold text-primary-teal">
+
+          <span id="caloriesValue">
+            -
+          </span>
+
+          <small class="fs-6 text-muted">
+            kcal / day
+          </small>
+
+        </div>
+
+        <hr>
+
+        <div class="d-flex justify-content-between text-muted small">
+
+          <span>
+            Activity:
+            <strong id="caloriesActivity" class="text-dark">
+            </strong>
+          </span>
+
+          <span>
+            Goal:
+            <strong id="caloriesGoal" class="text-dark">
+            </strong>
+          </span>
+
+        </div>
+
+      </div>
+
+      <button class="btn btn-teal btn-lg w-100 mt-4" onclick="continueToWorkoutPlan()">
+        See My Workout Plan
+      </button>
+
+    </div>
+
+  </div>
+
+  <div id="screen-workout-plan" class="d-none py-5">
+
+    <div class="container" style="max-width: 900px;">
+
+      <div class="text-center mb-4">
+
+        <h3 class="brand-font fw-bold">
+          Your Workout Plan
+        </h3>
+
+        <p class="text-muted">
+          Level:
+          <strong id="workoutLevelLabel">
+            -
+          </strong>
+        </p>
+
+      </div>
+
+      <div class="row" id="workoutPlanList">
+      </div>
+
+      <div class="text-center mt-3">
+
+        <button class="btn btn-teal btn-lg px-5" onclick="continueToDietPlan()">
+          See My Diet Plan
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="screen-diet-plan" class="d-none py-5">
+
+    <div class="container" style="max-width: 700px;">
+
+      <div class="text-center mb-4">
+
+        <h3 class="brand-font fw-bold">
+          Your Diet Plan
+        </h3>
+
+        <p class="text-muted">
+          Simple meals to match your goal.
+        </p>
+
+      </div>
+
+      <div class="row" id="dietPlanList">
+      </div>
+
+      <div class="text-center mt-3">
+
+        <button class="btn btn-coral btn-lg px-5" onclick="continueToDashboard()">
+          Go to My Dashboard
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="screen-dashboard" class="d-none dashboard-page">
+    <aside class="dashboard-sidebar">
+
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+        <span>AI Fitness Coach</span>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Dashboard navigation">
+        <a href="#" class="sidebar-link active" data-screen="screen-dashboard" onclick="navigateTo('screen-dashboard')">
+          <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+        </a>
+        <a href="#" class="sidebar-link" data-screen="screen-workout" onclick="navigateTo('screen-workout')">
+          <i class="bi bi-person-walking"></i><span>Workout</span>
+        </a>
+        <a href="#" class="sidebar-link" data-screen="screen-diet" onclick="navigateTo('screen-diet')">
+          <i class="bi bi-egg-fried"></i><span>Diet</span>
+        </a>
+        <a href="#" class="sidebar-link" data-screen="screen-progress" onclick="navigateTo('screen-progress')">
+          <i class="bi bi-bar-chart-line-fill"></i><span>Progress</span>
+        </a>
+        <a href="#" class="sidebar-link" data-screen="screen-chatbot" onclick="navigateTo('screen-chatbot')">
+          <i class="bi bi-chat-dots"></i><span>Chatbot</span>
+        </a>
+        <a href="#" class="sidebar-link" data-screen="screen-profile-page" onclick="navigateTo('screen-profile-page')">
+          <i class="bi bi-person"></i><span>Profile</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom-card">
+        <i class="bi bi-lightning-charge-fill"></i>
+        <strong>Better habits.</strong>
+        <span>A healthier you.</span>
+        <div class="sidebar-line"></div>
+      </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+      <div class="dashboard-topbar">
+        <div class="dashboard-search">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Search anything..." aria-label="Search">
+        </div>
+
+        <div class="topbar-right">
+          <button class="notification-btn" type="button" aria-label="Notifications">
+            <i class="bi bi-bell"></i><span></span>
+          </button>
+          <div class="profile-mini">
+            <div class="profile-avatar"><i class="bi bi-person-fill"></i></div>
+            <div class="profile-mini-text">
+              <small>Welcome back</small>
+              <strong id="dashboardUserName">User</strong>
+            </div>
+            <i class="bi bi-chevron-down profile-arrow"></i>
+          </div>
         </div>
       </div>
 
-      
-      <div id="habits-tab" class="tab-content">
-        <div class="list-item">
-          <span>Drink 3L Water</span>
-          <input type="checkbox">
-        </div>
-        <div class="list-item">
-          <span>8 Hours Sleep</span>
-          <input type="checkbox">
-        </div>
-        <div class="list-item">
-          <span>10,000 Steps Walking</span>
-          <input type="checkbox">
+      <div class="dashboard-content">
+
+        <section class="dashboard-hero">
+          <div class="hero-content">
+            <span class="hero-small-title">YOUR DAILY OVERVIEW</span>
+            <h1 id="dashboardGreeting">Good day!</h1>
+            <p>Here's how today is going. Keep moving towards your goals.</p>
+          </div>
+          <div class="hero-message">
+            <span>“Small steps every day<br>lead to big results.”</span>
+            <div class="hero-line"></div>
+          </div>
+        </section>
+
+        <section class="dashboard-stats">
+
+          <div class="dashboard-stat-card calories-card">
+            <div class="stat-icon"><i class="bi bi-fire"></i></div>
+            <div class="stat-information">
+              <span class="stat-title">Calories</span>
+              <strong id="statCalories">-</strong>
+              <small>kcal / day</small>
+            </div>
+            <div class="stat-trend"><i class="bi bi-graph-up-arrow"></i> Active</div>
+          </div>
+
+          <div class="dashboard-stat-card bmi-card">
+            <div class="stat-icon"><i class="bi bi-person-bounding-box"></i></div>
+            <div class="stat-information">
+              <span class="stat-title">BMI</span>
+              <strong id="statBmi">-</strong>
+              <small>body mass index</small>
+            </div>
+            <span class="bmi-status">Health</span>
+          </div>
+
+          <div class="dashboard-stat-card goal-card-dashboard">
+            <div class="stat-icon"><i class="bi bi-bullseye"></i></div>
+            <div class="stat-information">
+              <span class="stat-title">Goal</span>
+              <strong id="statGoal">-</strong>
+              <small>your current target</small>
+            </div>
+          </div>
+
+          <div class="dashboard-stat-card streak-card">
+            <div class="stat-icon"><i class="bi bi-fire"></i></div>
+            <div class="stat-information">
+              <span class="stat-title"><i class="bi bi-fire streak-flame"></i> Streak</span>
+              <strong id="statStreak">0 Days</strong>
+              <small>keep it going</small>
+            </div>
+          </div>
+
+        </section>
+
+        <section class="dashboard-trackers">
+
+          <div class="tracker-card water-dashboard-card">
+            <div class="tracker-header">
+              <div class="tracker-title">
+                <div class="tracker-icon water-icon"><i class="bi bi-droplet-fill"></i></div>
+                <h3>Water</h3>
+              </div>
+              <span id="waterCount">0 / 8 glasses</span>
+            </div>
+
+            <div class="tracker-progress">
+              <div class="tracker-progress-bar water-progress" id="waterProgressBar" style="width:0%"></div>
+            </div>
+            <div class="progress-percent"><span>Daily hydration</span><strong id="waterPercent">0%</strong></div>
+
+            <div class="water-controls">
+              <button class="water-btn minus-btn" id="waterMinusBtn" onclick="addWater(-1)" type="button"
+                aria-label="Remove water">−</button>
+              <button class="water-btn plus-btn" id="waterPlusBtn" onclick="addWater(1)" type="button"
+                aria-label="Add water">+</button>
+            </div>
+
+            <div class="tracker-tip water-tip">
+              <i class="bi bi-info-circle-fill"></i>
+              <span>Stay hydrated for better energy and focus.</span>
+            </div>
+          </div>
+
+          <div class="tracker-card meals-dashboard-card">
+            <div class="tracker-header">
+              <div class="tracker-title">
+                <div class="tracker-icon meals-icon"><i class="bi bi-egg-fried"></i></div>
+                <h3>Meals</h3>
+              </div>
+              <span id="mealCount">0 / 4 completed</span>
+            </div>
+            <div class="tracker-list" id="mealTrackerList"></div>
+            <div class="tracker-tip meals-tip">
+              <i class="bi bi-leaf-fill"></i>
+              <span>Healthy meals fuel a better you.</span>
+            </div>
+          </div>
+
+          <div class="tracker-card workout-dashboard-card">
+            <div class="tracker-header">
+              <div class="tracker-title">
+                <div class="tracker-icon workout-icon"><i class="bi bi-activity"></i></div>
+                <h3>Workout</h3>
+              </div>
+              <span>Status: <strong id="workoutStatus">-</strong></span>
+            </div>
+            <div class="tracker-list" id="workoutTrackerList"></div>
+            <div class="empty-state d-none" id="emptyWorkoutMsg">No workout completed today.</div>
+            <div class="tracker-tip workout-tip">
+              <i class="bi bi-bullseye"></i>
+              <span>Small steps every day lead to big results.</span>
+            </div>
+          </div>
+
+          <div class="tracker-card habits-dashboard-card">
+            <div class="tracker-header">
+              <div class="tracker-title">
+                <div class="tracker-icon habits-icon"><i class="bi bi-check2-square"></i></div>
+                <h3>Daily Habits</h3>
+              </div>
+              <span id="habitCount">0 / 4 habits completed</span>
+            </div>
+            <div class="tracker-list" id="habitTrackerList"></div>
+            <div class="tracker-tip habits-tip">
+              <i class="bi bi-star-fill"></i>
+              <span>Build good habits, build a healthier you.</span>
+            </div>
+          </div>
+
+        </section>
+      </div>
+    </main>
+
+  </div>
+
+  <div id="screen-workout" class="d-none app-page">
+
+    <aside class="dashboard-sidebar app-page-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo"><i class="bi bi-heart-pulse-fill"></i></div><span>AI Fitness Coach</span>
+      </div>
+      <nav class="sidebar-nav" aria-label="Page navigation">
+        <a href="#" class="sidebar-link " data-screen="screen-dashboard" onclick="navigateTo('screen-dashboard')"><i
+            class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a>
+        <a href="#" class="sidebar-link active" data-screen="screen-workout" onclick="navigateTo('screen-workout')"><i
+            class="bi bi-person-walking"></i><span>Workout</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-diet" onclick="navigateTo('screen-diet')"><i
+            class="bi bi-egg-fried"></i><span>Diet</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-progress" onclick="navigateTo('screen-progress')"><i
+            class="bi bi-bar-chart-line-fill"></i><span>Progress</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-chatbot" onclick="navigateTo('screen-chatbot')"><i
+            class="bi bi-chat-dots"></i><span>Chatbot</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-profile-page"
+          onclick="navigateTo('screen-profile-page')"><i class="bi bi-person"></i><span>Profile</span></a>
+      </nav>
+      <div class="sidebar-bottom-card"><i class="bi bi-lightning-charge-fill"></i><strong>Better habits.</strong><span>A
+          healthier you.</span>
+        <div class="sidebar-line"></div>
+      </div>
+    </aside>
+    <main class="dashboard-main app-page-main">
+      <div class="dashboard-topbar app-page-topbar">
+        <div class="dashboard-search"><i class="bi bi-search"></i><input type="text" placeholder="Search anything..."
+            aria-label="Search"></div>
+        <div class="topbar-right"><button class="notification-btn" type="button" aria-label="Notifications"><i
+              class="bi bi-bell"></i><span></span></button>
+          <div class="profile-mini">
+            <div class="profile-avatar"><i class="bi bi-person-fill"></i></div>
+            <div class="profile-mini-text"><small>Welcome back</small><strong>User</strong></div><i
+              class="bi bi-chevron-down profile-arrow"></i>
+          </div>
         </div>
       </div>
+      <div class="app-page-content">
 
-    
-      <div id="meals-tab" class="tab-content">
-        <div class="list-item">
-          <span>Breakfast: Oatmeal & Fruit</span>
-          <span class="badge">400 kcal</span>
-        </div>
-        <div class="list-item">
-          <span>Lunch: Grilled Chicken Salad</span>
-          <span class="badge">600 kcal</span>
-        </div>
-        <div class="list-item">
-          <span>Dinner: Fish & Vegetables</span>
-          <span class="badge">500 kcal</span>
+
+        <div class="container" style="max-width: 900px;">
+
+          <h3 class="brand-font fw-bold mb-1">
+            Workout Plan
+          </h3>
+
+          <p class="text-muted mb-1">
+            Level:
+            <strong id="workoutLevelLabel2">
+              -
+            </strong>
+          </p>
+
+          <p class="text-muted mb-4">
+            Today's exercises
+          </p>
+
+          <div class="card p-3 mb-4">
+
+            <div id="workoutTrackerList2"></div>
+
+          </div>
+
+          <h5 class="fw-bold mb-3">
+            Full Weekly Plan
+          </h5>
+
+          <div class="row" id="workoutPlanList2">
+          </div>
+
         </div>
       </div>
+    </main>
+  </div>
 
-      <button class="btn btn-secondary" onclick="nextStep(1)">Log Out</button>
-    </section>
+  <div id="screen-diet" class="d-none app-page">
 
-  </main>
+    <aside class="dashboard-sidebar app-page-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo"><i class="bi bi-heart-pulse-fill"></i></div><span>AI Fitness Coach</span>
+      </div>
+      <nav class="sidebar-nav" aria-label="Page navigation">
+        <a href="#" class="sidebar-link " data-screen="screen-dashboard" onclick="navigateTo('screen-dashboard')"><i
+            class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-workout" onclick="navigateTo('screen-workout')"><i
+            class="bi bi-person-walking"></i><span>Workout</span></a>
+        <a href="#" class="sidebar-link active" data-screen="screen-diet" onclick="navigateTo('screen-diet')"><i
+            class="bi bi-egg-fried"></i><span>Diet</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-progress" onclick="navigateTo('screen-progress')"><i
+            class="bi bi-bar-chart-line-fill"></i><span>Progress</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-chatbot" onclick="navigateTo('screen-chatbot')"><i
+            class="bi bi-chat-dots"></i><span>Chatbot</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-profile-page"
+          onclick="navigateTo('screen-profile-page')"><i class="bi bi-person"></i><span>Profile</span></a>
+      </nav>
+      <div class="sidebar-bottom-card"><i class="bi bi-lightning-charge-fill"></i><strong>Better habits.</strong><span>A
+          healthier you.</span>
+        <div class="sidebar-line"></div>
+      </div>
+    </aside>
+    <main class="dashboard-main app-page-main">
+      <div class="dashboard-topbar app-page-topbar">
+        <div class="dashboard-search"><i class="bi bi-search"></i><input type="text" placeholder="Search anything..."
+            aria-label="Search"></div>
+        <div class="topbar-right"><button class="notification-btn" type="button" aria-label="Notifications"><i
+              class="bi bi-bell"></i><span></span></button>
+          <div class="profile-mini">
+            <div class="profile-avatar"><i class="bi bi-person-fill"></i></div>
+            <div class="profile-mini-text"><small>Welcome back</small><strong>User</strong></div><i
+              class="bi bi-chevron-down profile-arrow"></i>
+          </div>
+        </div>
+      </div>
+      <div class="app-page-content">
+
+
+        <div class="container" style="max-width: 700px;">
+
+          <h3 class="brand-font fw-bold mb-1">
+            Diet Plan
+          </h3>
+
+          <p class="text-muted mb-4">
+            Meals matched to your current goal.
+          </p>
+
+          <div class="row" id="dietPlanList2">
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="screen-progress" class="d-none app-page">
+
+    <aside class="dashboard-sidebar app-page-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo"><i class="bi bi-heart-pulse-fill"></i></div><span>AI Fitness Coach</span>
+      </div>
+      <nav class="sidebar-nav" aria-label="Page navigation">
+        <a href="#" class="sidebar-link " data-screen="screen-dashboard" onclick="navigateTo('screen-dashboard')"><i
+            class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-workout" onclick="navigateTo('screen-workout')"><i
+            class="bi bi-person-walking"></i><span>Workout</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-diet" onclick="navigateTo('screen-diet')"><i
+            class="bi bi-egg-fried"></i><span>Diet</span></a>
+        <a href="#" class="sidebar-link active" data-screen="screen-progress" onclick="navigateTo('screen-progress')"><i
+            class="bi bi-bar-chart-line-fill"></i><span>Progress</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-chatbot" onclick="navigateTo('screen-chatbot')"><i
+            class="bi bi-chat-dots"></i><span>Chatbot</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-profile-page"
+          onclick="navigateTo('screen-profile-page')"><i class="bi bi-person"></i><span>Profile</span></a>
+      </nav>
+      <div class="sidebar-bottom-card"><i class="bi bi-lightning-charge-fill"></i><strong>Better habits.</strong><span>A
+          healthier you.</span>
+        <div class="sidebar-line"></div>
+      </div>
+    </aside>
+    <main class="dashboard-main app-page-main">
+      <div class="dashboard-topbar app-page-topbar">
+        <div class="dashboard-search"><i class="bi bi-search"></i><input type="text" placeholder="Search anything..."
+            aria-label="Search"></div>
+        <div class="topbar-right"><button class="notification-btn" type="button" aria-label="Notifications"><i
+              class="bi bi-bell"></i><span></span></button>
+          <div class="profile-mini">
+            <div class="profile-avatar"><i class="bi bi-person-fill"></i></div>
+            <div class="profile-mini-text"><small>Welcome back</small><strong>User</strong></div><i
+              class="bi bi-chevron-down profile-arrow"></i>
+          </div>
+        </div>
+      </div>
+      <div class="app-page-content">
+
+
+        <div class="container" style="max-width: 900px;">
+
+          <h3 class="brand-font fw-bold mb-4">
+            Your Progress
+          </h3>
+
+          <div class="row g-3">
+
+
+            <div class="col-6 col-md-4">
+
+              <div class="stat-card">
+
+                <div class="stat-label">
+                  Current Weight
+                </div>
+
+                <div class="stat-value" id="progCurrentWeight">
+                  -
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="col-6 col-md-4">
+
+              <div class="stat-card">
+
+                <div class="stat-label">
+                  Starting Weight
+                </div>
+
+                <div class="stat-value" id="progStartingWeight">
+                  -
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="col-6 col-md-4">
+
+              <div class="stat-card">
+
+                <div class="stat-label">
+                  Weight Change
+                </div>
+
+                <div class="stat-value" id="progWeightChange">
+                  -
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="col-6 col-md-4">
+
+              <div class="stat-card">
+
+                <div class="stat-label">
+                  Total Workouts
+                </div>
+
+                <div class="stat-value" id="progWorkouts">
+                  -
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="col-6 col-md-4">
+
+              <div class="stat-card">
+
+                <div class="stat-label">
+                  Average Water
+                </div>
+
+                <div class="stat-value" id="progAvgWater">
+                  -
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="col-6 col-md-4">
+
+              <div class="stat-card">
+
+                <div class="stat-label">
+                  Meals Completed
+                </div>
+
+                <div class="stat-value" id="progMeals">
+                  -
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="col-6 col-md-4">
+
+              <div class="stat-card">
+
+                <div class="stat-label">
+                  Current Streak
+                </div>
+
+                <div class="stat-value" id="progStreak">
+                  -
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="col-6 col-md-4">
+
+              <div class="stat-card">
+
+                <div class="stat-label">
+                  Habit Completion
+                </div>
+
+                <div class="stat-value" id="progHabits">
+                  -
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <p class="empty-state d-none mt-3" id="emptyMealsMsg">
+            No meals completed yet. Start your fitness journey today!
+          </p>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="screen-chatbot" class="d-none app-page">
+
+    <aside class="dashboard-sidebar app-page-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo"><i class="bi bi-heart-pulse-fill"></i></div><span>AI Fitness Coach</span>
+      </div>
+      <nav class="sidebar-nav" aria-label="Page navigation">
+        <a href="#" class="sidebar-link " data-screen="screen-dashboard" onclick="navigateTo('screen-dashboard')"><i
+            class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-workout" onclick="navigateTo('screen-workout')"><i
+            class="bi bi-person-walking"></i><span>Workout</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-diet" onclick="navigateTo('screen-diet')"><i
+            class="bi bi-egg-fried"></i><span>Diet</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-progress" onclick="navigateTo('screen-progress')"><i
+            class="bi bi-bar-chart-line-fill"></i><span>Progress</span></a>
+        <a href="#" class="sidebar-link active" data-screen="screen-chatbot" onclick="navigateTo('screen-chatbot')"><i
+            class="bi bi-chat-dots"></i><span>Chatbot</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-profile-page"
+          onclick="navigateTo('screen-profile-page')"><i class="bi bi-person"></i><span>Profile</span></a>
+      </nav>
+      <div class="sidebar-bottom-card"><i class="bi bi-lightning-charge-fill"></i><strong>Better habits.</strong><span>A
+          healthier you.</span>
+        <div class="sidebar-line"></div>
+      </div>
+    </aside>
+    <main class="dashboard-main app-page-main">
+      <div class="dashboard-topbar app-page-topbar">
+        <div class="dashboard-search"><i class="bi bi-search"></i><input type="text" placeholder="Search anything..."
+            aria-label="Search"></div>
+        <div class="topbar-right"><button class="notification-btn" type="button" aria-label="Notifications"><i
+              class="bi bi-bell"></i><span></span></button>
+          <div class="profile-mini">
+            <div class="profile-avatar"><i class="bi bi-person-fill"></i></div>
+            <div class="profile-mini-text"><small>Welcome back</small><strong>User</strong></div><i
+              class="bi bi-chevron-down profile-arrow"></i>
+          </div>
+        </div>
+      </div>
+      <div class="app-page-content">
+
+
+        <div class="container" style="max-width: 600px;">
+
+          <h3 class="brand-font fw-bold mb-1">
+            Chat with your Coach
+          </h3>
+
+          <p class="text-muted mb-3">
+            Quick tips — not real AI, just friendly presets.
+          </p>
+
+          <div id="chatWindow" class="mb-3">
+          </div>
+
+          <div class="d-flex flex-wrap gap-2 justify-content-center">
+
+            <button class="btn btn-outline-teal btn-sm" onclick="askChatbot('workout')">
+
+              <i class="bi bi-activity"></i>
+              Workout Tips
+
+            </button>
+
+            <button class="btn btn-outline-teal btn-sm" onclick="askChatbot('diet')">
+
+              <i class="bi bi-egg-fried"></i>
+              Diet Tips
+
+            </button>
+
+            <button class="btn btn-outline-teal btn-sm" onclick="askChatbot('water')">
+
+              <i class="bi bi-droplet-fill"></i>
+              Water
+
+            </button>
+
+            <button class="btn btn-outline-teal btn-sm" onclick="askChatbot('motivation')">
+
+              <i class="bi bi-stars"></i>
+              Motivation
+
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="screen-profile-page" class="d-none app-page">
+
+    <aside class="dashboard-sidebar app-page-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo"><i class="bi bi-heart-pulse-fill"></i></div><span>AI Fitness Coach</span>
+      </div>
+      <nav class="sidebar-nav" aria-label="Page navigation">
+        <a href="#" class="sidebar-link " data-screen="screen-dashboard" onclick="navigateTo('screen-dashboard')"><i
+            class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-workout" onclick="navigateTo('screen-workout')"><i
+            class="bi bi-person-walking"></i><span>Workout</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-diet" onclick="navigateTo('screen-diet')"><i
+            class="bi bi-egg-fried"></i><span>Diet</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-progress" onclick="navigateTo('screen-progress')"><i
+            class="bi bi-bar-chart-line-fill"></i><span>Progress</span></a>
+        <a href="#" class="sidebar-link " data-screen="screen-chatbot" onclick="navigateTo('screen-chatbot')"><i
+            class="bi bi-chat-dots"></i><span>Chatbot</span></a>
+        <a href="#" class="sidebar-link active" data-screen="screen-profile-page"
+          onclick="navigateTo('screen-profile-page')"><i class="bi bi-person"></i><span>Profile</span></a>
+      </nav>
+      <div class="sidebar-bottom-card"><i class="bi bi-lightning-charge-fill"></i><strong>Better habits.</strong><span>A
+          healthier you.</span>
+        <div class="sidebar-line"></div>
+      </div>
+    </aside>
+    <main class="dashboard-main app-page-main">
+      <div class="dashboard-topbar app-page-topbar">
+        <div class="dashboard-search"><i class="bi bi-search"></i><input type="text" placeholder="Search anything..."
+            aria-label="Search"></div>
+        <div class="topbar-right"><button class="notification-btn" type="button" aria-label="Notifications"><i
+              class="bi bi-bell"></i><span></span></button>
+          <div class="profile-mini">
+            <div class="profile-avatar"><i class="bi bi-person-fill"></i></div>
+            <div class="profile-mini-text"><small>Welcome back</small><strong>User</strong></div><i
+              class="bi bi-chevron-down profile-arrow"></i>
+          </div>
+        </div>
+      </div>
+      <div class="app-page-content">
+
+
+        <div class="container" style="max-width: 560px;">
+
+          <h3 class="brand-font fw-bold mb-4">
+            My Profile
+          </h3>
+
+          <div class="card p-4 mb-3">
+
+            <dl class="row mb-0">
+
+              <dt class="col-5 text-muted">
+                Name
+              </dt>
+
+              <dd class="col-7" id="ppName">
+                -
+              </dd>
+
+
+              <dt class="col-5 text-muted">
+                Email
+              </dt>
+
+              <dd class="col-7" id="ppEmail">
+                -
+              </dd>
+
+
+              <dt class="col-5 text-muted">
+                Age
+              </dt>
+
+              <dd class="col-7" id="ppAge">
+                -
+              </dd>
+
+
+              <dt class="col-5 text-muted">
+                Gender
+              </dt>
+
+              <dd class="col-7" id="ppGender">
+                -
+              </dd>
+
+
+              <dt class="col-5 text-muted">
+                Height
+              </dt>
+
+              <dd class="col-7" id="ppHeight">
+                -
+              </dd>
+
+
+              <dt class="col-5 text-muted">
+                Weight
+              </dt>
+
+              <dd class="col-7" id="ppWeight">
+                -
+              </dd>
+
+
+              <dt class="col-5 text-muted">
+                Goal
+              </dt>
+
+              <dd class="col-7" id="ppGoal">
+                -
+              </dd>
+
+
+              <dt class="col-5 text-muted">
+                BMI
+              </dt>
+
+              <dd class="col-7" id="ppBmi">
+                -
+              </dd>
+
+
+              <dt class="col-5 text-muted">
+                Calories
+              </dt>
+
+              <dd class="col-7" id="ppCalories">
+                -
+              </dd>
+
+            </dl>
+
+          </div>
+
+
+          <div class="d-grid gap-2">
+
+            <button class="btn btn-teal" onclick="openEditProfile()">
+
+              <i class="bi bi-pencil-square"></i>
+              Edit Profile
+
+            </button>
+
+
+            <button class="btn btn-outline-teal" onclick="openChangeGoal()">
+
+              <i class="bi bi-flag"></i>
+              Change Goal
+
+            </button>
+
+
+            <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#resetConfirmModal">
+
+              <i class="bi bi-arrow-counterclockwise"></i>
+              Reset Data
+
+            </button>
+
+
+            <button class="btn btn-coral" onclick="handleLogout()">
+
+              <i class="bi bi-box-arrow-right"></i>
+              Logout
+
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+
+  <div id="screen-edit-profile" class="d-none py-4">
+
+    <div class="container" style="max-width: 560px;">
+
+      <h3 class="brand-font fw-bold mb-4">
+        Edit Profile
+      </h3>
+
+      <div class="card p-4">
+
+        <form id="editProfileForm" novalidate>
+
+          <div class="row">
+
+            <div class="col-sm-6 mb-3">
+
+              <label class="form-label">
+                Age
+              </label>
+
+              <input type="number" class="form-control" id="editAge" required>
+
+              <div class="invalid-feedback" id="editAgeError">
+              </div>
+
+            </div>
+
+
+            <div class="col-sm-6 mb-3">
+
+              <label class="form-label d-block">
+                Gender
+              </label>
+
+              <div class="form-check form-check-inline mt-2">
+
+                <input class="form-check-input" type="radio" name="editGender" id="editGenderMale" value="Male">
+
+                <label class="form-check-label" for="editGenderMale">
+                  Male
+                </label>
+
+              </div>
+
+              <div class="form-check form-check-inline">
+
+                <input class="form-check-input" type="radio" name="editGender" id="editGenderFemale" value="Female">
+
+                <label class="form-check-label" for="editGenderFemale">
+                  Female
+                </label>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="row">
+
+            <div class="col-sm-6 mb-3">
+
+              <label class="form-label">
+                Height (cm)
+              </label>
+
+              <input type="number" class="form-control" id="editHeight" required>
+
+              <div class="invalid-feedback" id="editHeightError">
+              </div>
+
+            </div>
+
+
+            <div class="col-sm-6 mb-3">
+
+              <label class="form-label">
+                Weight (kg)
+              </label>
+
+              <input type="number" class="form-control" id="editWeight" required>
+
+              <div class="invalid-feedback" id="editWeightError">
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="mb-4">
+
+            <label class="form-label">
+              Activity Level
+            </label>
+
+            <select class="form-select" id="editActivity">
+
+              <option value="sedentary">
+                Sedentary
+              </option>
+
+              <option value="light">
+                Lightly Active
+              </option>
+
+              <option value="moderate">
+                Moderately Active
+              </option>
+
+              <option value="active">
+                Very Active
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="d-flex gap-2">
+
+            <button type="button" class="btn btn-outline-secondary w-50" onclick="goToScreen('screen-profile-page')">
+              Cancel
+            </button>
+
+            <button type="submit" class="btn btn-teal w-50">
+              Save Changes
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="screen-change-goal" class="d-none py-4">
+
+    <div class="container" style="max-width: 700px;">
+
+      <h3 class="brand-font fw-bold mb-4 text-center">
+        Change Your Goal
+      </h3>
+
+      <div class="row g-3" id="changeGoalScreen">
+
+
+        <div class="col-6 col-md-3">
+
+          <div class="goal-card" data-goal="lose" onclick="selectChangeGoal('lose')">
+
+            <div class="goal-icon">
+              <i class="bi bi-fire"></i>
+            </div>
+
+            <div class="fw-semibold">
+              Lose Weight
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-3">
+
+          <div class="goal-card" data-goal="gain" onclick="selectChangeGoal('gain')">
+
+            <div class="goal-icon">
+              <i class="bi bi-lightning-charge-fill"></i>
+            </div>
+
+            <div class="fw-semibold">
+              Gain Muscle
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-3">
+
+          <div class="goal-card" data-goal="healthy" onclick="selectChangeGoal('healthy')">
+
+            <div class="goal-icon">
+              <i class="bi bi-heart-fill"></i>
+            </div>
+
+            <div class="fw-semibold">
+              Stay Healthy
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-3">
+
+          <div class="goal-card" data-goal="improve" onclick="selectChangeGoal('improve')">
+
+            <div class="goal-icon">
+              <i class="bi bi-graph-up-arrow"></i>
+            </div>
+
+            <div class="fw-semibold">
+              Improve Fitness
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="d-flex gap-2 mt-4 justify-content-center">
+
+        <button class="btn btn-outline-secondary px-4" onclick="goToScreen('screen-profile-page')">
+          Cancel
+        </button>
+
+        <button class="btn btn-teal px-4" onclick="confirmChangeGoal()">
+          Save Goal
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="modal fade" id="resetConfirmModal" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+      <div class="modal-content">
+
+        <div class="modal-header">
+
+          <h5 class="modal-title">
+            Reset all data?
+          </h5>
+
+          <button type="button" class="btn-close" data-bs-dismiss="modal">
+          </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+          Are you sure you want to reset all fitness data?
+          This cannot be undone.
+
+        </div>
+
+
+        <div class="modal-footer">
+
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            Cancel
+          </button>
+
+          <button type="button" class="btn btn-coral" data-bs-dismiss="modal" onclick="resetAppData()">
+            Yes, Reset
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="./storage.js"></script>
+
+  <script src="./auth.js"></script>
+
+  <script src="./profile.js"></script>
+
+  <script src="./fitness.js"></script>
+
+  <script src="./dashboard.js"></script>
+
+  <script src="./chatbot.js"></script>
 
   <script src="./app.js"></script>
+
+
 </body>
+
 </html>
